@@ -1,4 +1,4 @@
-package com.mikhailovskii.course_work.commands;
+package com.mikhailovskii.course_work.constants;
 
 abstract public class Commands {
 

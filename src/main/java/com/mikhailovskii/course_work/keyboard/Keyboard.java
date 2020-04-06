@@ -1,6 +1,6 @@
 package com.mikhailovskii.course_work.keyboard;
 
-import com.mikhailovskii.course_work.commands.Commands;
+import com.mikhailovskii.course_work.constants.Commands;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 

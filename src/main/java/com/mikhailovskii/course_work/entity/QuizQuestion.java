@@ -3,17 +3,13 @@ package com.mikhailovskii.course_work.entity;
 public class QuizQuestion extends BaseEntity {
 
     private String question;
-    private String firstAnswer;
-    private String secondAnswer;
-    private String thirdAnswer;
-    private String forthAnswer;
+    private int rightAnswer;
+    private String[] answers;
 
-    public QuizQuestion(String question, String firstAnswer, String secondAnswer, String thirdAnswer, String forthAnswer) {
+    public QuizQuestion(String question, String[] answers, int rightAnswer) {
         this.question = question;
-        this.firstAnswer = firstAnswer;
-        this.secondAnswer = secondAnswer;
-        this.thirdAnswer = thirdAnswer;
-        this.forthAnswer = forthAnswer;
+        this.answers = answers;
+        this.rightAnswer = rightAnswer;
     }
 
     public String getQuestion() {
@@ -24,36 +20,20 @@ public class QuizQuestion extends BaseEntity {
         this.question = question;
     }
 
-    public String getFirstAnswer() {
-        return firstAnswer;
+    public int getRightAnswer() {
+        return rightAnswer;
     }
 
-    public void setFirstAnswer(String firstAnswer) {
-        this.firstAnswer = firstAnswer;
+    public void setRightAnswer(int rightAnswer) {
+        this.rightAnswer = rightAnswer;
     }
 
-    public String getSecondAnswer() {
-        return secondAnswer;
+    public String[] getAnswers() {
+        return answers;
     }
 
-    public void setSecondAnswer(String secondAnswer) {
-        this.secondAnswer = secondAnswer;
-    }
-
-    public String getThirdAnswer() {
-        return thirdAnswer;
-    }
-
-    public void setThirdAnswer(String thirdAnswer) {
-        this.thirdAnswer = thirdAnswer;
-    }
-
-    public String getForthAnswer() {
-        return forthAnswer;
-    }
-
-    public void setForthAnswer(String forthAnswer) {
-        this.forthAnswer = forthAnswer;
+    public void setAnswers(String[] answers) {
+        this.answers = answers;
     }
 
 }
