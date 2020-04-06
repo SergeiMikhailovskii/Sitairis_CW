@@ -1,5 +1,6 @@
-package com.mikhailovskii.course_work;
+package com.mikhailovskii.course_work.main;
 
+import com.mikhailovskii.course_work.bot.FootballQuizBot;
 import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
