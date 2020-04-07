@@ -1,12 +1,15 @@
 package com.mikhailovskii.course_work.quiz;
 
+import com.mikhailovskii.course_work.constants.State;
 import com.mikhailovskii.course_work.entity.QuizQuestion;
 import com.mikhailovskii.course_work.keyboard.Keyboard;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
+import java.util.prefs.Preferences;
+
 public class PlayersQuiz {
 
-    private int currentQuestion = 0;
+    private int currentQuestion;
 
     private QuizQuestion[] playersQuiz = new QuizQuestion[]{
             new QuizQuestion("Question 1", new String[]{"A", "B", "C", "D"}, 0),
@@ -22,6 +25,7 @@ public class PlayersQuiz {
     };
 
     public SendMessage startQuiz(long chatId) {
+        currentQuestion = Preferences.userRoot().node(getClass().getName()).getInt(State.CURRENT_PLAYERS_QUIZ_QUESTION, 0);
         if (currentQuestion >= playersQuiz.length) {
             currentQuestion = 0;
         }
@@ -35,6 +39,15 @@ public class PlayersQuiz {
                         playersQuiz[currentQuestion].getAnswers()[3]
                 ));
         currentQuestion++;
+
+        // TODO remove if app will crash here
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Preferences.userRoot().node(getClass().getName()).putInt(State.CURRENT_PLAYERS_QUIZ_QUESTION, currentQuestion);
+            }
+        }).start();
+
         return sendMessage;
     }
 
