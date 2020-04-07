@@ -18,11 +18,11 @@ public class FootballQuizBot extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
         // For cleaning preferences data
-//                try {
-//                    Preferences.userRoot().node(getClass().getName()).clear();
-//                } catch (BackingStoreException e) {
-//                    e.printStackTrace();
-//                }
+//        try {
+//            Preferences.userRoot().node(getClass().getName()).clear();
+//        } catch (BackingStoreException e) {
+//            e.printStackTrace();
+//        }
 
         Message receivedMessage;
         String state = Preferences.userRoot().node(getClass().getName()).get(State.CURRENT_STATE, State.INITIAL_STATE);
