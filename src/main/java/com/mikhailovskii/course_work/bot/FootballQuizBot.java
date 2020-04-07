@@ -17,6 +17,13 @@ public class FootballQuizBot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
+        // For cleaning preferences data
+//                try {
+//                    Preferences.userRoot().node(getClass().getName()).clear();
+//                } catch (BackingStoreException e) {
+//                    e.printStackTrace();
+//                }
+
         Message receivedMessage;
         String state = Preferences.userRoot().node(getClass().getName()).get(State.CURRENT_STATE, State.INITIAL_STATE);
 
@@ -74,8 +81,13 @@ public class FootballQuizBot extends TelegramLongPollingBot {
 
     private void handlePlayerQuizStateCommand(Message receivedMessage) {
         try {
-            execute(playersQuiz.handleAnswer(receivedMessage.getText(), receivedMessage.getChatId()));
-            execute(playersQuiz.startQuiz(receivedMessage.getChatId()));
+            if (receivedMessage.getText().equals(Commands.LEAVE_PLAYERS_QUIZ)) {
+                Preferences.userRoot().node(getClass().getName()).put(State.CURRENT_STATE, State.MAIN_MENU_STATE);
+                execute(playersQuiz.stopQuiz(receivedMessage.getChatId()));
+            } else {
+                execute(playersQuiz.handleAnswer(receivedMessage.getText(), receivedMessage.getChatId()));
+                execute(playersQuiz.startQuiz(receivedMessage.getChatId()));
+            }
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }

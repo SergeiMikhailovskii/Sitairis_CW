@@ -22,6 +22,9 @@ public class PlayersQuiz {
     };
 
     public SendMessage startQuiz(long chatId) {
+        if (currentQuestion >= playersQuiz.length) {
+            currentQuestion = 0;
+        }
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(chatId)
                 .setText(playersQuiz[currentQuestion].getQuestion())
@@ -59,6 +62,14 @@ public class PlayersQuiz {
                     ));
             return sendMessage;
         }
+    }
+
+    public SendMessage stopQuiz(long chatId) {
+        SendMessage sendMessage = new SendMessage();
+        sendMessage.setChatId(chatId)
+                .setText("You finished the quiz. Feel free to come back at any time")
+                .setReplyMarkup(Keyboard.getMainMenuKeyboard());
+        return sendMessage;
     }
 
 }

@@ -47,6 +47,9 @@ public class Keyboard {
         row.add(thirdAnswer);
         row.add(forthAnswer);
         keyboardRows.add(row);
+        row = new KeyboardRow();
+        row.add(Commands.LEAVE_PLAYERS_QUIZ);
+        keyboardRows.add(row);
         replyKeyboardMarkup.setKeyboard(keyboardRows);
 
         return replyKeyboardMarkup;
