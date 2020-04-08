@@ -9,14 +9,16 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CheckScore {
+public class UserScore {
+
+    private CheckUsersScoreManager scoreManager = new CheckUsersScoreManager();
 
     public SendMessage getUsersScore(long chatId) {
         StringBuilder result = new StringBuilder();
         List<User> users;
 
         try {
-            users = new CheckUsersScoreManager().getUsersScore();
+            users = scoreManager.getUsersScore();
         } catch (SQLException e) {
             e.printStackTrace();
             users = new ArrayList<>();
@@ -32,6 +34,16 @@ public class CheckScore {
                 .setReplyMarkup(Keyboard.getMainMenuKeyboard());
 
         return sendMessage;
+    }
+
+    public void addUserToDB(User user) {
+        try {
+            if (!scoreManager.isUserInDB(user.getUserId())) {
+                scoreManager.addUserToDB(user);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 }

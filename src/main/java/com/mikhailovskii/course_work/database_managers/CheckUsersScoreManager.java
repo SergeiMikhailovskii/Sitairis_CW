@@ -24,4 +24,15 @@ public class CheckUsersScoreManager {
         return users;
     }
 
+    public void addUserToDB(User user) throws SQLException {
+        DatabaseManager.getStatementInstance().executeUpdate(
+                "INSERT INTO users VALUE (" + user.getUserId() + ",'" + user.getUserName() + "'," + user.getScore() + ")"
+        );
+    }
+
+    public boolean isUserInDB(long id) throws SQLException {
+        ResultSet resultSet = DatabaseManager.getStatementInstance().executeQuery("SELECT * FROM users WHERE id=" + id);
+        return resultSet.next();
+    }
+
 }

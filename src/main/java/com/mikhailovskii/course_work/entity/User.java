@@ -1,5 +1,7 @@
 package com.mikhailovskii.course_work.entity;
 
+import java.util.Formatter;
+
 public class User extends BaseEntity {
 
     private int userId;
@@ -38,7 +40,10 @@ public class User extends BaseEntity {
 
     @Override
     public String toString() {
-        return userId + " " + userName + " " + score + "\n";
+        StringBuilder builder = new StringBuilder();
+        Formatter formatter = new Formatter(builder);
+        formatter.format("%12d %20s %4d\n", userId, userName, score);
+        return builder.toString();
     }
 
 }
