@@ -9,29 +9,22 @@ import java.util.List;
 
 public class PlayerQuizManager {
 
-    public List<QuizQuestion> getPlayers() throws Exception {
+    public List<QuizQuestion> getPlayers() throws SQLException {
 
-        try {
-            List<QuizQuestion> questions = new ArrayList<>();
-            ResultSet resultSet = DatabaseManager.getStatementInstance().executeQuery("SELECT * FROM quiz_question");
-            while (resultSet.next()) {
-                questions.add(new QuizQuestion(resultSet.getString("question"),
-                        new String[]{
-                                resultSet.getString("first_answer"),
-                                resultSet.getString("second_answer"),
-                                resultSet.getString("third_answer"),
-                                resultSet.getString("forth_answer")
-                        },
-                        resultSet.getInt("right_answer")
-                ));
-            }
-            return questions;
-        } catch (SQLException e) {
-            e.printStackTrace();
+        List<QuizQuestion> questions = new ArrayList<>();
+        ResultSet resultSet = DatabaseManager.getStatementInstance().executeQuery("SELECT * FROM quiz_question");
+        while (resultSet.next()) {
+            questions.add(new QuizQuestion(resultSet.getString("question"),
+                    new String[]{
+                            resultSet.getString("first_answer"),
+                            resultSet.getString("second_answer"),
+                            resultSet.getString("third_answer"),
+                            resultSet.getString("forth_answer")
+                    },
+                    resultSet.getInt("right_answer")
+            ));
         }
-
-        // TODO replace on custom exception
-        throw new Exception("Error getting questions");
+        return questions;
 
     }
 

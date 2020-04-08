@@ -44,8 +44,6 @@ public class PlayersQuiz {
     }
 
     public SendMessage handleAnswer(String answer, long chatId) {
-        System.out.println(answer);
-        System.out.println(currentQuestion);
         SendMessage sendMessage = new SendMessage();
         if (answer.equals(playersQuiz.get(currentQuestion).getAnswers()[playersQuiz.get(currentQuestion).getRightAnswer()])) {
             sendMessage.setChatId(chatId)

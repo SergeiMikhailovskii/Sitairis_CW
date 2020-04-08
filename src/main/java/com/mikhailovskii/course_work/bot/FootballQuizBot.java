@@ -3,6 +3,7 @@ package com.mikhailovskii.course_work.bot;
 import com.mikhailovskii.course_work.constants.Commands;
 import com.mikhailovskii.course_work.constants.State;
 import com.mikhailovskii.course_work.keyboard.Keyboard;
+import com.mikhailovskii.course_work.quiz.CheckScore;
 import com.mikhailovskii.course_work.quiz.PlayersQuiz;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -14,6 +15,7 @@ import java.util.prefs.Preferences;
 
 public class FootballQuizBot extends TelegramLongPollingBot {
     private PlayersQuiz playersQuiz = new PlayersQuiz();
+    private CheckScore checkScore = new CheckScore();
 
     @Override
     public void onUpdateReceived(Update update) {
@@ -71,6 +73,13 @@ public class FootballQuizBot extends TelegramLongPollingBot {
         if (receivedMessage.getText().equals(Commands.PLAYERS_QUIZ)) {
             Preferences.userRoot().node(getClass().getName()).put(State.CURRENT_STATE, State.PLAYER_QUIZ_STATE);
             SendMessage message = playersQuiz.getQuestion(receivedMessage.getChatId());
+            try {
+                execute(message);
+            } catch (TelegramApiException e) {
+                e.printStackTrace();
+            }
+        } if (receivedMessage.getText().equals(Commands.CHECK_SCORE)) {
+            SendMessage message = checkScore.getUsersScore(receivedMessage.getChatId());
             try {
                 execute(message);
             } catch (TelegramApiException e) {
