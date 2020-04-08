@@ -25,7 +25,7 @@ public class PlayersQuiz {
 
     }
 
-    public SendMessage startQuiz(long chatId) {
+    public SendMessage getQuestion(long chatId) {
         currentQuestion = Preferences.userRoot().node(getClass().getName()).getInt(State.CURRENT_PLAYERS_QUIZ_QUESTION, 0);
         if (currentQuestion >= playersQuiz.size()) {
             currentQuestion = 0;
@@ -39,16 +39,15 @@ public class PlayersQuiz {
                         playersQuiz.get(currentQuestion).getAnswers()[2],
                         playersQuiz.get(currentQuestion).getAnswers()[3]
                 ));
-        currentQuestion++;
-
-        Preferences.userRoot().node(getClass().getName()).putInt(State.CURRENT_PLAYERS_QUIZ_QUESTION, currentQuestion);
 
         return sendMessage;
     }
 
     public SendMessage handleAnswer(String answer, long chatId) {
+        System.out.println(answer);
+        System.out.println(currentQuestion);
+        SendMessage sendMessage = new SendMessage();
         if (answer.equals(playersQuiz.get(currentQuestion).getAnswers()[playersQuiz.get(currentQuestion).getRightAnswer()])) {
-            SendMessage sendMessage = new SendMessage();
             sendMessage.setChatId(chatId)
                     .setText("Right answer")
                     .setReplyMarkup(Keyboard.getQuizQuestionReplyKeyboard(
@@ -57,9 +56,7 @@ public class PlayersQuiz {
                             playersQuiz.get(currentQuestion).getAnswers()[2],
                             playersQuiz.get(currentQuestion).getAnswers()[3]
                     ));
-            return sendMessage;
         } else {
-            SendMessage sendMessage = new SendMessage();
             sendMessage.setChatId(chatId)
                     .setText("Wrong answer")
                     .setReplyMarkup(Keyboard.getQuizQuestionReplyKeyboard(
@@ -68,8 +65,12 @@ public class PlayersQuiz {
                             playersQuiz.get(currentQuestion).getAnswers()[2],
                             playersQuiz.get(currentQuestion).getAnswers()[3]
                     ));
-            return sendMessage;
         }
+        currentQuestion++;
+
+        Preferences.userRoot().node(getClass().getName()).putInt(State.CURRENT_PLAYERS_QUIZ_QUESTION, currentQuestion);
+
+        return sendMessage;
     }
 
     public SendMessage stopQuiz(long chatId) {

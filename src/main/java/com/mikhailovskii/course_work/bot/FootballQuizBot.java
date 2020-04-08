@@ -70,7 +70,7 @@ public class FootballQuizBot extends TelegramLongPollingBot {
     private void handleMainMenuStateCommand(Message receivedMessage) {
         if (receivedMessage.getText().equals(Commands.PLAYERS_QUIZ)) {
             Preferences.userRoot().node(getClass().getName()).put(State.CURRENT_STATE, State.PLAYER_QUIZ_STATE);
-            SendMessage message = playersQuiz.startQuiz(receivedMessage.getChatId());
+            SendMessage message = playersQuiz.getQuestion(receivedMessage.getChatId());
             try {
                 execute(message);
             } catch (TelegramApiException e) {
@@ -86,7 +86,7 @@ public class FootballQuizBot extends TelegramLongPollingBot {
                 execute(playersQuiz.stopQuiz(receivedMessage.getChatId()));
             } else {
                 execute(playersQuiz.handleAnswer(receivedMessage.getText(), receivedMessage.getChatId()));
-                execute(playersQuiz.startQuiz(receivedMessage.getChatId()));
+                execute(playersQuiz.getQuestion(receivedMessage.getChatId()));
             }
         } catch (TelegramApiException e) {
             e.printStackTrace();
