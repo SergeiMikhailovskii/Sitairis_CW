@@ -16,24 +16,12 @@ public class QuizQuestion extends BaseEntity {
         return question;
     }
 
-    public void setQuestion(String question) {
-        this.question = question;
-    }
-
     public int getRightAnswer() {
         return rightAnswer;
     }
 
-    public void setRightAnswer(int rightAnswer) {
-        this.rightAnswer = rightAnswer;
-    }
-
     public String[] getAnswers() {
         return answers;
-    }
-
-    public void setAnswers(String[] answers) {
-        this.answers = answers;
     }
 
 }
