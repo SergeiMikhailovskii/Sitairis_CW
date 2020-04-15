@@ -46,4 +46,14 @@ public class UserScore {
         }
     }
 
+    void addPointsToUser(int pointsAmount, long userId) {
+        try {
+            if (scoreManager.isUserInDB(userId)) {
+                scoreManager.addPointsToUser(pointsAmount, userId);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

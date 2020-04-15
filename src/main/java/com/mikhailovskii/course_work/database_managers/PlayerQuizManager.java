@@ -21,7 +21,8 @@ public class PlayerQuizManager {
                             resultSet.getString("third_answer"),
                             resultSet.getString("forth_answer")
                     },
-                    resultSet.getInt("right_answer")
+                    resultSet.getInt("right_answer"),
+                    resultSet.getInt("points")
             ));
         }
         return questions;

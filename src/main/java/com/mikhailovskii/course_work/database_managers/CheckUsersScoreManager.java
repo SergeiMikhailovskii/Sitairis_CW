@@ -35,4 +35,11 @@ public class CheckUsersScoreManager {
         return resultSet.next();
     }
 
+    public void addPointsToUser(int amount, long id) throws SQLException {
+        ResultSet resultSet = DatabaseManager.getStatementInstance().executeQuery("SELECT * FROM users WHERE id=" + id);
+        resultSet.next();
+        int score = resultSet.getInt("score");
+        DatabaseManager.getStatementInstance().executeUpdate("UPDATE users SET score=" + (score + amount) + " WHERE id=" + id);
+    }
+
 }

@@ -14,6 +14,7 @@ public class PlayersQuiz {
 
     private int currentQuestion;
     private List<QuizQuestion> playersQuiz;
+    private UserScore userScore = new UserScore();
 
     public PlayersQuiz() {
         try {
@@ -43,9 +44,10 @@ public class PlayersQuiz {
         return sendMessage;
     }
 
-    public SendMessage handleAnswer(String answer, long chatId) {
+    public SendMessage handleAnswer(String answer, long chatId, long userId) {
         SendMessage sendMessage = new SendMessage();
         if (answer.equals(playersQuiz.get(currentQuestion).getAnswers()[playersQuiz.get(currentQuestion).getRightAnswer()])) {
+            userScore.addPointsToUser(playersQuiz.get(currentQuestion).getPoints(), userId);
             sendMessage.setChatId(chatId)
                     .setText("Right answer")
                     .setReplyMarkup(Keyboard.getQuizQuestionReplyKeyboard(

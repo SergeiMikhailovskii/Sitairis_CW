@@ -97,7 +97,7 @@ public class FootballQuizBot extends TelegramLongPollingBot {
                 Preferences.userRoot().node(getClass().getName()).put(State.CURRENT_STATE, State.MAIN_MENU_STATE);
                 execute(playersQuiz.stopQuiz(receivedMessage.getChatId()));
             } else {
-                execute(playersQuiz.handleAnswer(receivedMessage.getText(), receivedMessage.getChatId()));
+                execute(playersQuiz.handleAnswer(receivedMessage.getText(), receivedMessage.getChatId(), receivedMessage.getFrom().getId()));
                 execute(playersQuiz.getQuestion(receivedMessage.getChatId()));
             }
         } catch (TelegramApiException e) {
