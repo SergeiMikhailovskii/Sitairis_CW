@@ -13,6 +13,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 
 import java.util.prefs.Preferences;
 
@@ -101,7 +102,13 @@ public class FootballQuizBot extends TelegramLongPollingBot {
             } else {
                 QuizAnswerResponse response = playersQuiz.handleAnswer(receivedMessage.getText(), receivedMessage.getChatId(), receivedMessage.getFrom().getId());
                 execute(new SendMessage().setChatId(receivedMessage.getChatId()).setText(response.getInfo().getInfo()));
-                execute(new SendPhoto().setChatId(receivedMessage.getChatId()).setPhoto(response.getInfo().getImage()));
+
+                try {
+                    execute(new SendPhoto().setChatId(receivedMessage.getChatId()).setPhoto(response.getInfo().getImage()));
+                } catch (TelegramApiRequestException e) {
+                    e.printStackTrace();
+                }
+
                 execute(response.getMessage());
                 execute(playersQuiz.getQuestion(receivedMessage.getChatId()));
             }
