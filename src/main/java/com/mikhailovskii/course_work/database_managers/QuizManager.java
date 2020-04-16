@@ -8,13 +8,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlayerQuizManager {
+public class QuizManager {
 
-    public List<QuizQuestion> getPlayers() throws SQLException {
-        int currentQuestion = 0;
-
+    public List<QuizQuestion> getQuizQuestions(String type) throws SQLException {
         List<QuizQuestion> questions = new ArrayList<>();
-        ResultSet resultSet = DatabaseManager.getStatementInstance().executeQuery("SELECT * FROM quiz_question");
+        ResultSet resultSet = DatabaseManager.getStatementInstance().executeQuery("SELECT * FROM quiz_question WHERE quiz_type='"+type+"'");
         while (resultSet.next()) {
             questions.add(new QuizQuestion(
                     resultSet.getInt("id"),
@@ -28,15 +26,14 @@ public class PlayerQuizManager {
             ));
         }
 
-        resultSet = DatabaseManager.getStatementInstance().executeQuery("SELECT * FROM quiz_question_values");
-        while (resultSet.next()) {
-            questions.get(currentQuestion).setRightAnswer(resultSet.getInt("right_answer"));
-            questions.get(currentQuestion).setPoints(resultSet.getInt("points"));
-            currentQuestion++;
+        for (QuizQuestion question : questions) {
+            resultSet = DatabaseManager.getStatementInstance().executeQuery("SELECT * FROM quiz_question_values WHERE id=" + question.getId());
+            resultSet.next();
+            question.setPoints(resultSet.getInt("points"));
+            question.setRightAnswer(resultSet.getInt("right_answer"));
         }
 
         return questions;
-
     }
 
     public QuestionInfo getQuestionInfo(int id) throws SQLException {

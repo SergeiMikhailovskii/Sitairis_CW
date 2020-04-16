@@ -1,7 +1,8 @@
 package com.mikhailovskii.course_work.quiz;
 
+import com.mikhailovskii.course_work.constants.Commands;
 import com.mikhailovskii.course_work.constants.State;
-import com.mikhailovskii.course_work.database_managers.PlayerQuizManager;
+import com.mikhailovskii.course_work.database_managers.QuizManager;
 import com.mikhailovskii.course_work.entity.QuestionInfo;
 import com.mikhailovskii.course_work.entity.QuizAnswerResponse;
 import com.mikhailovskii.course_work.entity.QuizQuestion;
@@ -13,16 +14,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.prefs.Preferences;
 
-public class PlayersQuiz {
+public class PlayersQuiz implements Quiz {
 
     private int currentQuestion;
     private List<QuizQuestion> playersQuiz;
     private UserScore userScore = new UserScore();
-    private PlayerQuizManager playerQuizManager = new PlayerQuizManager();
+    private QuizManager quizManager = new QuizManager();
 
     public PlayersQuiz() {
         try {
-            playersQuiz = playerQuizManager.getPlayers();
+            playersQuiz = quizManager.getQuizQuestions(Commands.PLAYER);
         } catch (Exception e) {
             e.printStackTrace();
             playersQuiz = new ArrayList<>();
@@ -30,6 +31,7 @@ public class PlayersQuiz {
 
     }
 
+    @Override
     public SendMessage getQuestion(long chatId) {
         currentQuestion = Preferences.userRoot().node(getClass().getName()).getInt(State.CURRENT_PLAYERS_QUIZ_QUESTION, 0);
         if (currentQuestion >= playersQuiz.size()) {
@@ -48,6 +50,7 @@ public class PlayersQuiz {
         return sendMessage;
     }
 
+    @Override
     public QuizAnswerResponse handleAnswer(String answer, long chatId, long userId) {
         SendMessage sendMessage = new SendMessage();
         if (answer.equals(playersQuiz.get(currentQuestion).getAnswers()[playersQuiz.get(currentQuestion).getRightAnswer()])) {
@@ -73,7 +76,7 @@ public class PlayersQuiz {
 
         QuestionInfo info = null;
         try {
-            info = playerQuizManager.getQuestionInfo(playersQuiz.get(currentQuestion).getId());
+            info = quizManager.getQuestionInfo(playersQuiz.get(currentQuestion).getId());
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -85,10 +88,11 @@ public class PlayersQuiz {
         return new QuizAnswerResponse(sendMessage, info);
     }
 
+    @Override
     public SendMessage stopQuiz(long chatId) {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(chatId)
-                .setText("You finished the quiz. Feel free to come back at any time")
+                .setText("You finished the players quiz. Feel free to come back at any time")
                 .setReplyMarkup(Keyboard.getMainMenuKeyboard());
         return sendMessage;
     }

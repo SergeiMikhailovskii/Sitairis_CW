@@ -5,6 +5,7 @@ import com.mikhailovskii.course_work.constants.State;
 import com.mikhailovskii.course_work.entity.QuizAnswerResponse;
 import com.mikhailovskii.course_work.entity.User;
 import com.mikhailovskii.course_work.keyboard.Keyboard;
+import com.mikhailovskii.course_work.quiz.EventsQuiz;
 import com.mikhailovskii.course_work.quiz.PlayersQuiz;
 import com.mikhailovskii.course_work.quiz.UserScore;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -19,6 +20,7 @@ import java.util.prefs.Preferences;
 
 public class FootballQuizBot extends TelegramLongPollingBot {
     private PlayersQuiz playersQuiz = new PlayersQuiz();
+    private EventsQuiz eventsQuiz = new EventsQuiz();
     private UserScore userScore = new UserScore();
 
     @Override
@@ -45,6 +47,8 @@ public class FootballQuizBot extends TelegramLongPollingBot {
             handleMainMenuStateCommand(receivedMessage);
         } else if (state.equals(State.PLAYER_QUIZ_STATE)) {
             handlePlayerQuizStateCommand(receivedMessage);
+        } else if (state.equals(State.EVENTS_QUIZ_STATE)) {
+            handleEventsQuizStateCommand(receivedMessage);
         }
     }
 
@@ -75,21 +79,35 @@ public class FootballQuizBot extends TelegramLongPollingBot {
     }
 
     private void handleMainMenuStateCommand(Message receivedMessage) {
-        if (receivedMessage.getText().equals(Commands.PLAYERS_QUIZ)) {
-            Preferences.userRoot().node(getClass().getName()).put(State.CURRENT_STATE, State.PLAYER_QUIZ_STATE);
-            SendMessage message = playersQuiz.getQuestion(receivedMessage.getChatId());
-            try {
-                execute(message);
-            } catch (TelegramApiException e) {
-                e.printStackTrace();
+        switch (receivedMessage.getText()) {
+            case Commands.PLAYERS_QUIZ: {
+                Preferences.userRoot().node(getClass().getName()).put(State.CURRENT_STATE, State.PLAYER_QUIZ_STATE);
+                SendMessage message = playersQuiz.getQuestion(receivedMessage.getChatId());
+                try {
+                    execute(message);
+                } catch (TelegramApiException e) {
+                    e.printStackTrace();
+                }
+                break;
             }
-        }
-        if (receivedMessage.getText().equals(Commands.CHECK_SCORE)) {
-            SendMessage message = userScore.getUsersScore(receivedMessage.getChatId());
-            try {
-                execute(message);
-            } catch (TelegramApiException e) {
-                e.printStackTrace();
+            case Commands.EVENTS_QUIZ: {
+                Preferences.userRoot().node(getClass().getName()).put(State.CURRENT_STATE, State.EVENTS_QUIZ_STATE);
+                SendMessage message = eventsQuiz.getQuestion(receivedMessage.getChatId());
+                try {
+                    execute(message);
+                } catch (TelegramApiException e) {
+                    e.printStackTrace();
+                }
+                break;
+            }
+            case Commands.CHECK_SCORE: {
+                SendMessage message = userScore.getUsersScore(receivedMessage.getChatId());
+                try {
+                    execute(message);
+                } catch (TelegramApiException e) {
+                    e.printStackTrace();
+                }
+                break;
             }
         }
     }
@@ -111,6 +129,29 @@ public class FootballQuizBot extends TelegramLongPollingBot {
 
                 execute(response.getMessage());
                 execute(playersQuiz.getQuestion(receivedMessage.getChatId()));
+            }
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void handleEventsQuizStateCommand(Message receivedMessage) {
+        try {
+            if (receivedMessage.getText().equals(Commands.LEAVE_EVENTS_QUIZ)) {
+                Preferences.userRoot().node(getClass().getName()).put(State.CURRENT_STATE, State.MAIN_MENU_STATE);
+                execute(eventsQuiz.stopQuiz(receivedMessage.getChatId()));
+            } else {
+                QuizAnswerResponse response = eventsQuiz.handleAnswer(receivedMessage.getText(), receivedMessage.getChatId(), receivedMessage.getFrom().getId());
+                execute(new SendMessage().setChatId(receivedMessage.getChatId()).setText(response.getInfo().getInfo()));
+
+                try {
+                    execute(new SendPhoto().setChatId(receivedMessage.getChatId()).setPhoto(response.getInfo().getImage()));
+                } catch (TelegramApiRequestException e) {
+                    e.printStackTrace();
+                }
+
+                execute(response.getMessage());
+                execute(eventsQuiz.getQuestion(receivedMessage.getChatId()));
             }
         } catch (TelegramApiException e) {
             e.printStackTrace();
