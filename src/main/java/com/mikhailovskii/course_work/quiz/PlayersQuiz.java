@@ -49,7 +49,7 @@ public class PlayersQuiz {
         if (answer.equals(playersQuiz.get(currentQuestion).getAnswers()[playersQuiz.get(currentQuestion).getRightAnswer()])) {
             userScore.addPointsToUser(playersQuiz.get(currentQuestion).getPoints(), userId);
             sendMessage.setChatId(chatId)
-                    .setText("Right answer")
+                    .setText("Right answer. You earned "+playersQuiz.get(currentQuestion).getPoints()+" points!")
                     .setReplyMarkup(Keyboard.getQuizQuestionReplyKeyboard(
                             playersQuiz.get(currentQuestion).getAnswers()[0],
                             playersQuiz.get(currentQuestion).getAnswers()[1],

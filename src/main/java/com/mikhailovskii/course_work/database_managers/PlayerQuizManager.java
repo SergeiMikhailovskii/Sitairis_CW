@@ -10,6 +10,7 @@ import java.util.List;
 public class PlayerQuizManager {
 
     public List<QuizQuestion> getPlayers() throws SQLException {
+        int currentQuestion = 0;
 
         List<QuizQuestion> questions = new ArrayList<>();
         ResultSet resultSet = DatabaseManager.getStatementInstance().executeQuery("SELECT * FROM quiz_question");
@@ -20,11 +21,17 @@ public class PlayerQuizManager {
                             resultSet.getString("second_answer"),
                             resultSet.getString("third_answer"),
                             resultSet.getString("forth_answer")
-                    },
-                    resultSet.getInt("right_answer"),
-                    resultSet.getInt("points")
+                    }
             ));
         }
+
+        resultSet = DatabaseManager.getStatementInstance().executeQuery("SELECT * FROM quiz_question_values");
+        while (resultSet.next()) {
+            questions.get(currentQuestion).setRightAnswer(resultSet.getInt("right_answer"));
+            questions.get(currentQuestion).setPoints(resultSet.getInt("points"));
+            currentQuestion++;
+        }
+
         return questions;
 
     }

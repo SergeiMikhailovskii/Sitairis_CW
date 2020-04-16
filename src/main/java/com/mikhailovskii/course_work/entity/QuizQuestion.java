@@ -14,6 +14,11 @@ public class QuizQuestion extends BaseEntity {
         this.points = points;
     }
 
+    public QuizQuestion(String question, String[] answers) {
+        this.question = question;
+        this.answers = answers;
+    }
+
     public String getQuestion() {
         return question;
     }
@@ -24,6 +29,14 @@ public class QuizQuestion extends BaseEntity {
 
     public String[] getAnswers() {
         return answers;
+    }
+
+    public void setRightAnswer(int rightAnswer) {
+        this.rightAnswer = rightAnswer;
+    }
+
+    public void setPoints(int points) {
+        this.points = points;
     }
 
     public int getPoints() {
