@@ -1,5 +1,6 @@
 package com.mikhailovskii.course_work.database_managers;
 
+import com.mikhailovskii.course_work.entity.QuestionInfo;
 import com.mikhailovskii.course_work.entity.QuizQuestion;
 
 import java.sql.ResultSet;
@@ -15,7 +16,9 @@ public class PlayerQuizManager {
         List<QuizQuestion> questions = new ArrayList<>();
         ResultSet resultSet = DatabaseManager.getStatementInstance().executeQuery("SELECT * FROM quiz_question");
         while (resultSet.next()) {
-            questions.add(new QuizQuestion(resultSet.getString("question"),
+            questions.add(new QuizQuestion(
+                    resultSet.getInt("id"),
+                    resultSet.getString("question"),
                     new String[]{
                             resultSet.getString("first_answer"),
                             resultSet.getString("second_answer"),
@@ -34,6 +37,12 @@ public class PlayerQuizManager {
 
         return questions;
 
+    }
+
+    public QuestionInfo getQuestionInfo(int id) throws SQLException {
+        ResultSet resultSet = DatabaseManager.getStatementInstance().executeQuery("SELECT  * FROM quiz_question_info WHERE id=" + id);
+        resultSet.next();
+        return new QuestionInfo(resultSet.getString("info"), resultSet.getString("image"));
     }
 
 }

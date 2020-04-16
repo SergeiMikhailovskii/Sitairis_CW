@@ -2,12 +2,14 @@ package com.mikhailovskii.course_work.bot;
 
 import com.mikhailovskii.course_work.constants.Commands;
 import com.mikhailovskii.course_work.constants.State;
+import com.mikhailovskii.course_work.entity.QuizAnswerResponse;
 import com.mikhailovskii.course_work.entity.User;
 import com.mikhailovskii.course_work.keyboard.Keyboard;
 import com.mikhailovskii.course_work.quiz.PlayersQuiz;
 import com.mikhailovskii.course_work.quiz.UserScore;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
@@ -97,7 +99,10 @@ public class FootballQuizBot extends TelegramLongPollingBot {
                 Preferences.userRoot().node(getClass().getName()).put(State.CURRENT_STATE, State.MAIN_MENU_STATE);
                 execute(playersQuiz.stopQuiz(receivedMessage.getChatId()));
             } else {
-                execute(playersQuiz.handleAnswer(receivedMessage.getText(), receivedMessage.getChatId(), receivedMessage.getFrom().getId()));
+                QuizAnswerResponse response = playersQuiz.handleAnswer(receivedMessage.getText(), receivedMessage.getChatId(), receivedMessage.getFrom().getId());
+                execute(new SendMessage().setChatId(receivedMessage.getChatId()).setText(response.getInfo().getInfo()));
+                execute(new SendPhoto().setChatId(receivedMessage.getChatId()).setPhoto(response.getInfo().getImage()));
+                execute(response.getMessage());
                 execute(playersQuiz.getQuestion(receivedMessage.getChatId()));
             }
         } catch (TelegramApiException e) {

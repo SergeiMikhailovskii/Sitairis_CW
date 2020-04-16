@@ -2,10 +2,13 @@ package com.mikhailovskii.course_work.quiz;
 
 import com.mikhailovskii.course_work.constants.State;
 import com.mikhailovskii.course_work.database_managers.PlayerQuizManager;
+import com.mikhailovskii.course_work.entity.QuestionInfo;
+import com.mikhailovskii.course_work.entity.QuizAnswerResponse;
 import com.mikhailovskii.course_work.entity.QuizQuestion;
 import com.mikhailovskii.course_work.keyboard.Keyboard;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.prefs.Preferences;
@@ -15,10 +18,11 @@ public class PlayersQuiz {
     private int currentQuestion;
     private List<QuizQuestion> playersQuiz;
     private UserScore userScore = new UserScore();
+    private PlayerQuizManager playerQuizManager = new PlayerQuizManager();
 
     public PlayersQuiz() {
         try {
-            playersQuiz = new PlayerQuizManager().getPlayers();
+            playersQuiz = playerQuizManager.getPlayers();
         } catch (Exception e) {
             e.printStackTrace();
             playersQuiz = new ArrayList<>();
@@ -44,12 +48,12 @@ public class PlayersQuiz {
         return sendMessage;
     }
 
-    public SendMessage handleAnswer(String answer, long chatId, long userId) {
+    public QuizAnswerResponse handleAnswer(String answer, long chatId, long userId) {
         SendMessage sendMessage = new SendMessage();
         if (answer.equals(playersQuiz.get(currentQuestion).getAnswers()[playersQuiz.get(currentQuestion).getRightAnswer()])) {
             userScore.addPointsToUser(playersQuiz.get(currentQuestion).getPoints(), userId);
             sendMessage.setChatId(chatId)
-                    .setText("Right answer. You earned "+playersQuiz.get(currentQuestion).getPoints()+" points!")
+                    .setText("Right answer. You earned " + playersQuiz.get(currentQuestion).getPoints() + " points!")
                     .setReplyMarkup(Keyboard.getQuizQuestionReplyKeyboard(
                             playersQuiz.get(currentQuestion).getAnswers()[0],
                             playersQuiz.get(currentQuestion).getAnswers()[1],
@@ -66,11 +70,19 @@ public class PlayersQuiz {
                             playersQuiz.get(currentQuestion).getAnswers()[3]
                     ));
         }
+
+        QuestionInfo info = null;
+        try {
+            info = playerQuizManager.getQuestionInfo(playersQuiz.get(currentQuestion).getId());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
         currentQuestion++;
 
         Preferences.userRoot().node(getClass().getName()).putInt(State.CURRENT_PLAYERS_QUIZ_QUESTION, currentQuestion);
 
-        return sendMessage;
+        return new QuizAnswerResponse(sendMessage, info);
     }
 
     public SendMessage stopQuiz(long chatId) {

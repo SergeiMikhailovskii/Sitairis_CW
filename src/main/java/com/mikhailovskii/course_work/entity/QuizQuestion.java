@@ -2,19 +2,14 @@ package com.mikhailovskii.course_work.entity;
 
 public class QuizQuestion extends BaseEntity {
 
+    private int id;
     private String question;
     private int rightAnswer;
     private int points;
     private String[] answers;
 
-    public QuizQuestion(String question, String[] answers, int rightAnswer, int points) {
-        this.question = question;
-        this.answers = answers;
-        this.rightAnswer = rightAnswer;
-        this.points = points;
-    }
-
-    public QuizQuestion(String question, String[] answers) {
+    public QuizQuestion(int id, String question, String[] answers) {
+        this.id = id;
         this.question = question;
         this.answers = answers;
     }
@@ -41,5 +36,9 @@ public class QuizQuestion extends BaseEntity {
 
     public int getPoints() {
         return points;
+    }
+
+    public int getId() {
+        return id;
     }
 }
