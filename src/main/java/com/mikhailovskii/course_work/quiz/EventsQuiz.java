@@ -18,7 +18,7 @@ public class EventsQuiz implements Quiz {
 
     private int currentQuestion;
     private List<QuizQuestion> eventsQuiz;
-    private UserScore userScore = new UserScore();
+    private UserFlow userFlow = new UserFlow();
     private QuizManager quizManager = new QuizManager();
 
     public EventsQuiz() {
@@ -36,7 +36,7 @@ public class EventsQuiz implements Quiz {
         QuizQuestion question = eventsQuiz.get(currentQuestion);
 
         if (answer.equals(question.getAnswers()[question.getRightAnswer()])) {
-            userScore.addPointsToUser(question.getPoints(), userId);
+            userFlow.addPointsToUser(question.getPoints(), userId);
             sendMessage.setChatId(chatId)
                     .setText("Right answer. You earned " + question.getPoints() + " points!")
                     .setReplyMarkup(Keyboard.getQuizQuestionReplyKeyboard(

@@ -18,7 +18,7 @@ public class PlayersQuiz implements Quiz {
 
     private int currentQuestion;
     private List<QuizQuestion> playersQuiz;
-    private UserScore userScore = new UserScore();
+    private UserFlow userFlow = new UserFlow();
     private QuizManager quizManager = new QuizManager();
 
     public PlayersQuiz() {
@@ -54,7 +54,7 @@ public class PlayersQuiz implements Quiz {
     public QuizAnswerResponse handleAnswer(String answer, long chatId, long userId) {
         SendMessage sendMessage = new SendMessage();
         if (answer.equals(playersQuiz.get(currentQuestion).getAnswers()[playersQuiz.get(currentQuestion).getRightAnswer()])) {
-            userScore.addPointsToUser(playersQuiz.get(currentQuestion).getPoints(), userId);
+            userFlow.addPointsToUser(playersQuiz.get(currentQuestion).getPoints(), userId);
             sendMessage.setChatId(chatId)
                     .setText("Right answer. You earned " + playersQuiz.get(currentQuestion).getPoints() + " points!")
                     .setReplyMarkup(Keyboard.getQuizQuestionReplyKeyboard(
