@@ -55,5 +55,18 @@ public class Keyboard {
         return replyKeyboardMarkup;
     }
 
+    public static ReplyKeyboardMarkup getSaveFactDialogKeyboard() {
+        ReplyKeyboardMarkup replyKeyboardMarkup = initKeyboard();
+
+        List<KeyboardRow> keyboardRows = new ArrayList<>();
+        KeyboardRow row = new KeyboardRow();
+        row.add("Yes, this fact is interesting");
+        row.add("No, thanks");
+        keyboardRows.add(row);
+        replyKeyboardMarkup.setKeyboard(keyboardRows);
+
+        return replyKeyboardMarkup;
+    }
+
 
 }
