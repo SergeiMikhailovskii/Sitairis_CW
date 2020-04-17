@@ -65,11 +65,13 @@ public class EventsQuiz implements Quiz {
             e.printStackTrace();
         }
 
+        QuizAnswerResponse response = new QuizAnswerResponse(question.getId(), sendMessage, info);
+
         currentQuestion++;
 
         Preferences.userRoot().putInt(State.CURRENT_EVENTS_QUIZ_QUESTION, currentQuestion);
 
-        return new QuizAnswerResponse(question.getId(), sendMessage, info);
+        return response;
     }
 
     @Override

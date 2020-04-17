@@ -60,7 +60,7 @@ public class Keyboard {
 
         List<KeyboardRow> keyboardRows = new ArrayList<>();
         KeyboardRow row = new KeyboardRow();
-        row.add("Yes, this fact is interesting");
+        row.add(Commands.SAVE_FACT);
         row.add("No, thanks");
         keyboardRows.add(row);
         replyKeyboardMarkup.setKeyboard(keyboardRows);

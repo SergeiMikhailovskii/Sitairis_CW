@@ -23,6 +23,8 @@ public class FootballQuizBot extends TelegramLongPollingBot {
     private EventsQuiz eventsQuiz = new EventsQuiz();
     private UserFlow userFlow = new UserFlow();
 
+    private int currentQuestionId = 0;
+
     @Override
     public void onUpdateReceived(Update update) {
         // For cleaning preferences data
@@ -49,6 +51,8 @@ public class FootballQuizBot extends TelegramLongPollingBot {
             handlePlayerQuizStateCommand(receivedMessage);
         } else if (state.equals(State.EVENTS_QUIZ_STATE)) {
             handleEventsQuizStateCommand(receivedMessage);
+        } else if (state.equals(State.SAVING_FACT_STATE)) {
+            handleSaveFactCommand(receivedMessage);
         }
     }
 
@@ -128,7 +132,10 @@ public class FootballQuizBot extends TelegramLongPollingBot {
                 }
 
                 execute(response.getMessage());
-                execute(playersQuiz.getQuestion(receivedMessage.getChatId()));
+
+                currentQuestionId = response.getQuestionId();
+
+                execute(eventsQuiz.saveFactDialog(State.EVENTS_QUIZ_STATE, response.getQuestionId(), receivedMessage.getChatId()));
             }
         } catch (TelegramApiException e) {
             e.printStackTrace();
@@ -151,11 +158,31 @@ public class FootballQuizBot extends TelegramLongPollingBot {
                 }
 
                 execute(response.getMessage());
-                execute(eventsQuiz.getQuestion(receivedMessage.getChatId()));
+
+                currentQuestionId = response.getQuestionId();
+
+                execute(eventsQuiz.saveFactDialog(State.EVENTS_QUIZ_STATE, response.getQuestionId(), receivedMessage.getChatId()));
             }
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
+    }
+
+    private void handleSaveFactCommand(Message receivedMessage) {
+        String previousState = Preferences.userRoot().get(State.PREVIOUS_STATE, "");
+        if (receivedMessage.getText().equals(Commands.SAVE_FACT)) {
+            userFlow.saveFact(currentQuestionId, receivedMessage.getFrom().getId());
+        }
+        try {
+            if (previousState.equals(State.EVENTS_QUIZ_STATE)) {
+                execute(eventsQuiz.getQuestion(receivedMessage.getChatId()));
+            } else {
+                execute(playersQuiz.getQuestion(receivedMessage.getChatId()));
+            }
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+        Preferences.userRoot().put(State.CURRENT_STATE, previousState);
     }
 
 }

@@ -84,11 +84,13 @@ public class PlayersQuiz implements Quiz {
             e.printStackTrace();
         }
 
+        QuizAnswerResponse response = new QuizAnswerResponse(playersQuiz.get(currentQuestion).getId(), sendMessage, info);
+
         currentQuestion++;
 
         Preferences.userRoot().putInt(State.CURRENT_PLAYERS_QUIZ_QUESTION, currentQuestion);
 
-        return new QuizAnswerResponse(playersQuiz.get(currentQuestion).getId(), sendMessage, info);
+        return response;
     }
 
     @Override

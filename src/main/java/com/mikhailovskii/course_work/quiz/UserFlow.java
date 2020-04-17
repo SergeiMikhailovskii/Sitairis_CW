@@ -1,6 +1,6 @@
 package com.mikhailovskii.course_work.quiz;
 
-import com.mikhailovskii.course_work.database_managers.CheckUsersScoreManager;
+import com.mikhailovskii.course_work.database_managers.UserManager;
 import com.mikhailovskii.course_work.entity.User;
 import com.mikhailovskii.course_work.keyboard.Keyboard;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -11,14 +11,14 @@ import java.util.List;
 
 public class UserFlow {
 
-    private CheckUsersScoreManager scoreManager = new CheckUsersScoreManager();
+    private UserManager userManager = new UserManager();
 
     public SendMessage getUsersScore(long chatId) {
         StringBuilder result = new StringBuilder();
         List<User> users;
 
         try {
-            users = scoreManager.getUsersScore();
+            users = userManager.getUsersScore();
         } catch (SQLException e) {
             e.printStackTrace();
             users = new ArrayList<>();
@@ -38,8 +38,8 @@ public class UserFlow {
 
     public void addUserToDB(User user) {
         try {
-            if (!scoreManager.isUserInDB(user.getUserId())) {
-                scoreManager.addUserToDB(user);
+            if (!userManager.isUserInDB(user.getUserId())) {
+                userManager.addUserToDB(user);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -48,12 +48,23 @@ public class UserFlow {
 
     void addPointsToUser(int pointsAmount, long userId) {
         try {
-            if (scoreManager.isUserInDB(userId)) {
-                scoreManager.addPointsToUser(pointsAmount, userId);
+            if (userManager.isUserInDB(userId)) {
+                userManager.addPointsToUser(pointsAmount, userId);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public void saveFact(int questionId, long userId) {
+        try {
+            if (!userManager.didUserSaveFact(questionId, userId)) {
+                userManager.saveFact(questionId, userId);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
     }
 
 }

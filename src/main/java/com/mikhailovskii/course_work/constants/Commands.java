@@ -13,6 +13,8 @@ abstract public class Commands {
     public static final String LEAVE_PLAYERS_QUIZ = "Leave players quiz";
     public static final String LEAVE_EVENTS_QUIZ = "Leave events quiz";
 
+    public static final String SAVE_FACT = "Yes, this fact is interesting";
+
     public static final String START = "/start";
 
 }

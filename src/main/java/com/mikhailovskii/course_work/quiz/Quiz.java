@@ -1,7 +1,11 @@
 package com.mikhailovskii.course_work.quiz;
 
+import com.mikhailovskii.course_work.constants.State;
 import com.mikhailovskii.course_work.entity.QuizAnswerResponse;
+import com.mikhailovskii.course_work.keyboard.Keyboard;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+
+import java.util.prefs.Preferences;
 
 public interface Quiz {
 
@@ -10,5 +14,18 @@ public interface Quiz {
     SendMessage getQuestion(long chatId);
 
     SendMessage stopQuiz(long chatId);
+
+    default SendMessage saveFactDialog(String state, int factId, long chatId) {
+        SendMessage saveFactDialog = new SendMessage();
+
+        Preferences.userRoot().put(State.CURRENT_STATE, State.SAVING_FACT_STATE);
+        Preferences.userRoot().put(State.PREVIOUS_STATE, state);
+
+        saveFactDialog.setChatId(chatId)
+                .setText("If this fact is interesting for you, you can save it. Do you want to do this?")
+                .setReplyMarkup(Keyboard.getSaveFactDialogKeyboard());
+
+        return saveFactDialog;
+    }
 
 }

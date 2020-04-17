@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CheckUsersScoreManager {
+public class UserManager {
 
     public List<User> getUsersScore() throws SQLException {
         List<User> users = new ArrayList<>();
@@ -40,6 +40,17 @@ public class CheckUsersScoreManager {
         resultSet.next();
         int score = resultSet.getInt("score");
         DatabaseManager.getStatementInstance().executeUpdate("UPDATE users SET score=" + (score + amount) + " WHERE id=" + id);
+    }
+
+    public boolean didUserSaveFact(int questionId, long userId) throws SQLException {
+        ResultSet resultSet = DatabaseManager.getStatementInstance().executeQuery("SELECT * FROM saved_fact WHERE user_id=" + userId + " AND quiz_question_info_id=" + questionId);
+        return resultSet.next();
+    }
+
+    public void saveFact(int questionId, long userId) throws SQLException {
+        DatabaseManager.getStatementInstance().executeUpdate(
+                "INSERT INTO saved_fact (user_id, quiz_question_info_id) VALUE (" + userId + ", " + questionId + ")"
+        );
     }
 
 }
