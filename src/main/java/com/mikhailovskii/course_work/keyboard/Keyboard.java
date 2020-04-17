@@ -35,7 +35,7 @@ public class Keyboard {
         return replyKeyboardMarkup;
     }
 
-    public static ReplyKeyboardMarkup getQuizQuestionReplyKeyboard(String firstAnswer, String secondAnswer, String thirdAnswer, String forthAnswer) {
+    public static ReplyKeyboardMarkup getQuizQuestionReplyKeyboard(String firstAnswer, String secondAnswer, String thirdAnswer, String forthAnswer, String leave) {
         ReplyKeyboardMarkup replyKeyboardMarkup = initKeyboard();
 
         List<KeyboardRow> keyboardRows = new ArrayList<>();
@@ -48,7 +48,7 @@ public class Keyboard {
         row.add(forthAnswer);
         keyboardRows.add(row);
         row = new KeyboardRow();
-        row.add(Commands.LEAVE_PLAYERS_QUIZ);
+        row.add(leave);
         keyboardRows.add(row);
         replyKeyboardMarkup.setKeyboard(keyboardRows);
 

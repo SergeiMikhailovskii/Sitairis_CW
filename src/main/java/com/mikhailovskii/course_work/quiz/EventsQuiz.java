@@ -43,7 +43,8 @@ public class EventsQuiz implements Quiz {
                             question.getAnswers()[0],
                             question.getAnswers()[1],
                             question.getAnswers()[2],
-                            question.getAnswers()[3]
+                            question.getAnswers()[3],
+                            Commands.LEAVE_EVENTS_QUIZ
                     ));
         } else {
             sendMessage.setChatId(chatId)
@@ -52,7 +53,8 @@ public class EventsQuiz implements Quiz {
                             question.getAnswers()[0],
                             question.getAnswers()[1],
                             question.getAnswers()[2],
-                            question.getAnswers()[3]
+                            question.getAnswers()[3],
+                            Commands.LEAVE_EVENTS_QUIZ
                     ));
         }
 
@@ -65,14 +67,14 @@ public class EventsQuiz implements Quiz {
 
         currentQuestion++;
 
-        Preferences.userRoot().node(getClass().getName()).putInt(State.CURRENT_EVENTS_QUIZ_QUESTION, currentQuestion);
+        Preferences.userRoot().putInt(State.CURRENT_EVENTS_QUIZ_QUESTION, currentQuestion);
 
-        return new QuizAnswerResponse(sendMessage, info);
+        return new QuizAnswerResponse(question.getId(), sendMessage, info);
     }
 
     @Override
     public SendMessage getQuestion(long chatId) {
-        currentQuestion = Preferences.userRoot().node(getClass().getName()).getInt(State.CURRENT_EVENTS_QUIZ_QUESTION, 0);
+        currentQuestion = Preferences.userRoot().getInt(State.CURRENT_EVENTS_QUIZ_QUESTION, 0);
         if (currentQuestion >= eventsQuiz.size()) {
             currentQuestion = 0;
         }
@@ -83,7 +85,8 @@ public class EventsQuiz implements Quiz {
                         eventsQuiz.get(currentQuestion).getAnswers()[0],
                         eventsQuiz.get(currentQuestion).getAnswers()[1],
                         eventsQuiz.get(currentQuestion).getAnswers()[2],
-                        eventsQuiz.get(currentQuestion).getAnswers()[3]
+                        eventsQuiz.get(currentQuestion).getAnswers()[3],
+                        Commands.LEAVE_EVENTS_QUIZ
                 ));
 
         return sendMessage;

@@ -33,7 +33,7 @@ public class PlayersQuiz implements Quiz {
 
     @Override
     public SendMessage getQuestion(long chatId) {
-        currentQuestion = Preferences.userRoot().node(getClass().getName()).getInt(State.CURRENT_PLAYERS_QUIZ_QUESTION, 0);
+        currentQuestion = Preferences.userRoot().getInt(State.CURRENT_PLAYERS_QUIZ_QUESTION, 0);
         if (currentQuestion >= playersQuiz.size()) {
             currentQuestion = 0;
         }
@@ -44,7 +44,8 @@ public class PlayersQuiz implements Quiz {
                         playersQuiz.get(currentQuestion).getAnswers()[0],
                         playersQuiz.get(currentQuestion).getAnswers()[1],
                         playersQuiz.get(currentQuestion).getAnswers()[2],
-                        playersQuiz.get(currentQuestion).getAnswers()[3]
+                        playersQuiz.get(currentQuestion).getAnswers()[3],
+                        Commands.LEAVE_PLAYERS_QUIZ
                 ));
 
         return sendMessage;
@@ -61,7 +62,8 @@ public class PlayersQuiz implements Quiz {
                             playersQuiz.get(currentQuestion).getAnswers()[0],
                             playersQuiz.get(currentQuestion).getAnswers()[1],
                             playersQuiz.get(currentQuestion).getAnswers()[2],
-                            playersQuiz.get(currentQuestion).getAnswers()[3]
+                            playersQuiz.get(currentQuestion).getAnswers()[3],
+                            Commands.LEAVE_PLAYERS_QUIZ
                     ));
         } else {
             sendMessage.setChatId(chatId)
@@ -70,7 +72,8 @@ public class PlayersQuiz implements Quiz {
                             playersQuiz.get(currentQuestion).getAnswers()[0],
                             playersQuiz.get(currentQuestion).getAnswers()[1],
                             playersQuiz.get(currentQuestion).getAnswers()[2],
-                            playersQuiz.get(currentQuestion).getAnswers()[3]
+                            playersQuiz.get(currentQuestion).getAnswers()[3],
+                            Commands.LEAVE_PLAYERS_QUIZ
                     ));
         }
 
@@ -83,9 +86,9 @@ public class PlayersQuiz implements Quiz {
 
         currentQuestion++;
 
-        Preferences.userRoot().node(getClass().getName()).putInt(State.CURRENT_PLAYERS_QUIZ_QUESTION, currentQuestion);
+        Preferences.userRoot().putInt(State.CURRENT_PLAYERS_QUIZ_QUESTION, currentQuestion);
 
-        return new QuizAnswerResponse(sendMessage, info);
+        return new QuizAnswerResponse(playersQuiz.get(currentQuestion).getId(), sendMessage, info);
     }
 
     @Override

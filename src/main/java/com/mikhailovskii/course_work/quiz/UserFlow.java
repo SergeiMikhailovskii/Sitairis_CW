@@ -56,8 +56,4 @@ public class UserFlow {
         }
     }
 
-    public SendMessage saveFactDialog() {
-        return null;
-    }
-
 }

@@ -27,13 +27,13 @@ public class FootballQuizBot extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update) {
         // For cleaning preferences data
 //        try {
-//            Preferences.userRoot().node(getClass().getName()).clear();
+//            Preferences.userRoot().clear();
 //        } catch (BackingStoreException e) {
 //            e.printStackTrace();
 //        }
 
         Message receivedMessage;
-        String state = Preferences.userRoot().node(getClass().getName()).get(State.CURRENT_STATE, State.INITIAL_STATE);
+        String state = Preferences.userRoot().get(State.CURRENT_STATE, State.INITIAL_STATE);
 
         if (update.hasMessage() && update.getMessage().hasText()) {
             receivedMessage = update.getMessage();
@@ -64,7 +64,7 @@ public class FootballQuizBot extends TelegramLongPollingBot {
 
     private void handleInitialStateCommand(Message command) {
         if (command.getText().equals(Commands.START)) {
-            Preferences.userRoot().node(getClass().getName()).put(State.CURRENT_STATE, State.MAIN_MENU_STATE);
+            Preferences.userRoot().put(State.CURRENT_STATE, State.MAIN_MENU_STATE);
             userFlow.addUserToDB(new User(command.getFrom().getId(), command.getFrom().getUserName(), 0));
             SendMessage sendMessage = new SendMessage();
             sendMessage.setChatId(command.getChatId())
@@ -81,7 +81,7 @@ public class FootballQuizBot extends TelegramLongPollingBot {
     private void handleMainMenuStateCommand(Message receivedMessage) {
         switch (receivedMessage.getText()) {
             case Commands.PLAYERS_QUIZ: {
-                Preferences.userRoot().node(getClass().getName()).put(State.CURRENT_STATE, State.PLAYER_QUIZ_STATE);
+                Preferences.userRoot().put(State.CURRENT_STATE, State.PLAYER_QUIZ_STATE);
                 SendMessage message = playersQuiz.getQuestion(receivedMessage.getChatId());
                 try {
                     execute(message);
@@ -91,7 +91,7 @@ public class FootballQuizBot extends TelegramLongPollingBot {
                 break;
             }
             case Commands.EVENTS_QUIZ: {
-                Preferences.userRoot().node(getClass().getName()).put(State.CURRENT_STATE, State.EVENTS_QUIZ_STATE);
+                Preferences.userRoot().put(State.CURRENT_STATE, State.EVENTS_QUIZ_STATE);
                 SendMessage message = eventsQuiz.getQuestion(receivedMessage.getChatId());
                 try {
                     execute(message);
@@ -115,7 +115,7 @@ public class FootballQuizBot extends TelegramLongPollingBot {
     private void handlePlayerQuizStateCommand(Message receivedMessage) {
         try {
             if (receivedMessage.getText().equals(Commands.LEAVE_PLAYERS_QUIZ)) {
-                Preferences.userRoot().node(getClass().getName()).put(State.CURRENT_STATE, State.MAIN_MENU_STATE);
+                Preferences.userRoot().put(State.CURRENT_STATE, State.MAIN_MENU_STATE);
                 execute(playersQuiz.stopQuiz(receivedMessage.getChatId()));
             } else {
                 QuizAnswerResponse response = playersQuiz.handleAnswer(receivedMessage.getText(), receivedMessage.getChatId(), receivedMessage.getFrom().getId());
@@ -138,7 +138,7 @@ public class FootballQuizBot extends TelegramLongPollingBot {
     private void handleEventsQuizStateCommand(Message receivedMessage) {
         try {
             if (receivedMessage.getText().equals(Commands.LEAVE_EVENTS_QUIZ)) {
-                Preferences.userRoot().node(getClass().getName()).put(State.CURRENT_STATE, State.MAIN_MENU_STATE);
+                Preferences.userRoot().put(State.CURRENT_STATE, State.MAIN_MENU_STATE);
                 execute(eventsQuiz.stopQuiz(receivedMessage.getChatId()));
             } else {
                 QuizAnswerResponse response = eventsQuiz.handleAnswer(receivedMessage.getText(), receivedMessage.getChatId(), receivedMessage.getFrom().getId());
