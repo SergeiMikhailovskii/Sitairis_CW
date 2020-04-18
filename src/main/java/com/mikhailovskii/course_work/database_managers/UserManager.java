@@ -55,7 +55,7 @@ public class UserManager {
     }
 
     public List<QuestionInfo> getSavedFacts(long userId) throws SQLException {
-        ResultSet resultSet = DatabaseManager.getStatementInstance().executeQuery("SELECT quiz_question_info.id, quiz_question_info.info, quiz_question_info.image, saved_fact.user_id, saved_fact.quiz_question_info_id FROM quiz_question_info INNER JOIN saved_fact on quiz_question_info.id = saved_fact.quiz_question_info_id");
+        ResultSet resultSet = DatabaseManager.getStatementInstance().executeQuery("SELECT quiz_question_info.id, quiz_question_info.info, quiz_question_info.image, saved_fact.user_id, saved_fact.quiz_question_info_id FROM quiz_question_info INNER JOIN saved_fact on quiz_question_info.id = saved_fact.quiz_question_info_id WHERE saved_fact.user_id=" + userId);
 
         List<QuestionInfo> savedFacts = new ArrayList<>();
 
@@ -64,6 +64,10 @@ public class UserManager {
         }
 
         return savedFacts;
+    }
+
+    public void resetScore(long userId) throws SQLException {
+        DatabaseManager.getStatementInstance().executeUpdate("UPDATE users SET score=0 WHERE id=" + userId);
     }
 
 }

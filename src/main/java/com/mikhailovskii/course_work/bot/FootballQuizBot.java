@@ -69,18 +69,22 @@ public class FootballQuizBot extends TelegramLongPollingBot {
     }
 
     private void handleInitialStateCommand(Message command) {
+        SendMessage sendMessage = new SendMessage();
+        sendMessage.setChatId(command.getChatId())
+                .setReplyMarkup(Keyboard.getMainMenuKeyboard());
+
         if (command.getText().equals(Commands.START)) {
             Preferences.userRoot().put(State.CURRENT_STATE, State.MAIN_MENU_STATE);
             userFlow.addUserToDB(new User(command.getFrom().getId(), command.getFrom().getUserName(), 0));
-            SendMessage sendMessage = new SendMessage();
-            sendMessage.setChatId(command.getChatId())
-                    .setText("You started the bot")
-                    .setReplyMarkup(Keyboard.getMainMenuKeyboard());
-            try {
-                execute(sendMessage);
-            } catch (TelegramApiException e) {
-                e.printStackTrace();
-            }
+            sendMessage.setText("You started the bot");
+
+        } else {
+            sendMessage.setText(Commands.UNKNOWN_COMMAND);
+        }
+        try {
+            execute(sendMessage);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
         }
     }
 
@@ -117,14 +121,41 @@ public class FootballQuizBot extends TelegramLongPollingBot {
             }
             case Commands.SAVED_FACTS: {
                 List<SavedFact> facts = userFlow.getSavedFacts(receivedMessage.getFrom().getId(), receivedMessage.getChatId());
-                facts.forEach(savedFact -> {
+                for (int i = 0; i < facts.size() - 1; i++) {
                     try {
-                        execute(savedFact.getInfo());
-                        execute(savedFact.getImage());
+                        execute(facts.get(i).getImage());
+                        execute(facts.get(i).getInfo());
                     } catch (TelegramApiException e) {
                         e.printStackTrace();
                     }
-                });
+                }
+                try {
+                    execute(facts.get(facts.size() - 1).getImage());
+                    execute(facts.get(facts.size() - 1).getInfo().setReplyMarkup(Keyboard.getMainMenuKeyboard()));
+                } catch (TelegramApiException e) {
+                    e.printStackTrace();
+                }
+                break;
+            }
+            case Commands.RESET_SCORE: {
+                userFlow.resetScore(receivedMessage.getFrom().getId());
+                SendMessage message = new SendMessage().setText("Score reset!")
+                        .setChatId(receivedMessage.getChatId())
+                        .setReplyMarkup(Keyboard.getMainMenuKeyboard());
+                try {
+                    execute(message);
+                } catch (TelegramApiException e) {
+                    e.printStackTrace();
+                }
+                break;
+            }
+            default: {
+                SendMessage sendMessage = new SendMessage().setChatId(receivedMessage.getChatId()).setText(Commands.UNKNOWN_COMMAND);
+                try {
+                    execute(sendMessage);
+                } catch (TelegramApiException e) {
+                    e.printStackTrace();
+                }
             }
         }
 

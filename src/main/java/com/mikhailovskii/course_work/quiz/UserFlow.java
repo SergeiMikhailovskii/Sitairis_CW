@@ -85,4 +85,12 @@ public class UserFlow {
         return null;
     }
 
+    public void resetScore(long userId) {
+        try {
+            userManager.resetScore(userId);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

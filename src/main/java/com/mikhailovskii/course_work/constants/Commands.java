@@ -16,6 +16,10 @@ abstract public class Commands {
 
     public static final String SAVE_FACT = "Yes, this fact is interesting";
 
+    public static final String UNKNOWN_COMMAND = "Unknown command";
+
+    public static final String RESET_SCORE = "Reset my score";
+
     public static final String START = "/start";
 
 }
