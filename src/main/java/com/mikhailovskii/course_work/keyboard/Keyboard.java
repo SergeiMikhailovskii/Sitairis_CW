@@ -23,12 +23,11 @@ public class Keyboard {
         List<KeyboardRow> keyboardRows = new ArrayList<>();
         KeyboardRow row = new KeyboardRow();
         row.add(Commands.PLAYERS_QUIZ);
-        keyboardRows.add(row);
-        row = new KeyboardRow();
         row.add(Commands.EVENTS_QUIZ);
         keyboardRows.add(row);
         row = new KeyboardRow();
         row.add(Commands.CHECK_SCORE);
+        row.add(Commands.SAVED_FACTS);
         keyboardRows.add(row);
         replyKeyboardMarkup.setKeyboard(keyboardRows);
 

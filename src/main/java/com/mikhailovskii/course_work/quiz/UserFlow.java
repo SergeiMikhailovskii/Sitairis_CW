@@ -1,9 +1,12 @@
 package com.mikhailovskii.course_work.quiz;
 
 import com.mikhailovskii.course_work.database_managers.UserManager;
+import com.mikhailovskii.course_work.entity.QuestionInfo;
+import com.mikhailovskii.course_work.entity.SavedFact;
 import com.mikhailovskii.course_work.entity.User;
 import com.mikhailovskii.course_work.keyboard.Keyboard;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -64,7 +67,22 @@ public class UserFlow {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
 
+    public List<SavedFact> getSavedFacts(long userId, long chatId) {
+        try {
+            List<QuestionInfo> facts = userManager.getSavedFacts(userId);
+            List<SavedFact> savedFactMessages = new ArrayList<>();
+            facts.forEach(fact -> {
+                SendMessage info = new SendMessage().setChatId(chatId).setText(fact.getInfo());
+                SendPhoto photo = new SendPhoto().setChatId(chatId).setPhoto(fact.getImage());
+                savedFactMessages.add(new SavedFact(info, photo));
+            });
+            return savedFactMessages;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }

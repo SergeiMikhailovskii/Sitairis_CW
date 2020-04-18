@@ -1,5 +1,6 @@
 package com.mikhailovskii.course_work.database_managers;
 
+import com.mikhailovskii.course_work.entity.QuestionInfo;
 import com.mikhailovskii.course_work.entity.User;
 
 import java.sql.ResultSet;
@@ -51,6 +52,18 @@ public class UserManager {
         DatabaseManager.getStatementInstance().executeUpdate(
                 "INSERT INTO saved_fact (user_id, quiz_question_info_id) VALUE (" + userId + ", " + questionId + ")"
         );
+    }
+
+    public List<QuestionInfo> getSavedFacts(long userId) throws SQLException {
+        ResultSet resultSet = DatabaseManager.getStatementInstance().executeQuery("SELECT quiz_question_info.id, quiz_question_info.info, quiz_question_info.image, saved_fact.user_id, saved_fact.quiz_question_info_id FROM quiz_question_info INNER JOIN saved_fact on quiz_question_info.id = saved_fact.quiz_question_info_id");
+
+        List<QuestionInfo> savedFacts = new ArrayList<>();
+
+        while (resultSet.next()) {
+            savedFacts.add(new QuestionInfo(resultSet.getString("quiz_question_info.info"), resultSet.getString("quiz_question_info.image")));
+        }
+
+        return savedFacts;
     }
 
 }

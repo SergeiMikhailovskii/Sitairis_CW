@@ -3,6 +3,7 @@ package com.mikhailovskii.course_work.bot;
 import com.mikhailovskii.course_work.constants.Commands;
 import com.mikhailovskii.course_work.constants.State;
 import com.mikhailovskii.course_work.entity.QuizAnswerResponse;
+import com.mikhailovskii.course_work.entity.SavedFact;
 import com.mikhailovskii.course_work.entity.User;
 import com.mikhailovskii.course_work.keyboard.Keyboard;
 import com.mikhailovskii.course_work.quiz.EventsQuiz;
@@ -16,6 +17,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 
+import java.util.List;
 import java.util.prefs.Preferences;
 
 public class FootballQuizBot extends TelegramLongPollingBot {
@@ -113,7 +115,19 @@ public class FootballQuizBot extends TelegramLongPollingBot {
                 }
                 break;
             }
+            case Commands.SAVED_FACTS: {
+                List<SavedFact> facts = userFlow.getSavedFacts(receivedMessage.getFrom().getId(), receivedMessage.getChatId());
+                facts.forEach(savedFact -> {
+                    try {
+                        execute(savedFact.getInfo());
+                        execute(savedFact.getImage());
+                    } catch (TelegramApiException e) {
+                        e.printStackTrace();
+                    }
+                });
+            }
         }
+
     }
 
     private void handlePlayerQuizStateCommand(Message receivedMessage) {
