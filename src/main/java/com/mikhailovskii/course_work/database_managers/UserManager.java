@@ -70,4 +70,9 @@ public class UserManager {
         DatabaseManager.getStatementInstance().executeUpdate("UPDATE users SET score=0 WHERE id=" + userId);
     }
 
+    public void deleteUser(long userId) throws SQLException {
+        DatabaseManager.getStatementInstance().executeUpdate("DELETE FROM saved_fact WHERE user_id="+userId);
+        DatabaseManager.getStatementInstance().executeUpdate("DELETE FROM users WHERE id=" + userId);
+    }
+
 }

@@ -48,7 +48,11 @@ public class FootballQuizBot extends TelegramLongPollingBot {
             return;
         }
 
-        if (state.equals(State.INITIAL_STATE)) {
+        if (receivedMessage.getText().contains("/clear")) {
+            if (receivedMessage.getFrom().getId() == 345457156) {
+                handleDeleteUserCommand(receivedMessage.getText().split(" ")[1]);
+            }
+        } else if (state.equals(State.INITIAL_STATE)) {
             handleInitialStateCommand(receivedMessage);
         } else if (state.equals(State.MAIN_MENU_STATE)) {
             handleMainMenuStateCommand(receivedMessage);
@@ -59,6 +63,10 @@ public class FootballQuizBot extends TelegramLongPollingBot {
         } else if (state.equals(State.SAVING_FACT_STATE)) {
             handleSaveFactCommand(receivedMessage);
         }
+    }
+
+    private void handleDeleteUserCommand(String s) {
+        userFlow.deleteUser(Long.parseLong(s));
     }
 
     @Override
@@ -232,5 +240,6 @@ public class FootballQuizBot extends TelegramLongPollingBot {
         }
         Preferences.userRoot().put(State.CURRENT_STATE, previousState);
     }
+
 
 }

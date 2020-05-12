@@ -93,4 +93,12 @@ public class UserFlow {
         }
     }
 
+    public void deleteUser(long userId) {
+        try {
+            userManager.deleteUser(userId);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
