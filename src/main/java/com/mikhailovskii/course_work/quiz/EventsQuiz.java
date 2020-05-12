@@ -38,7 +38,7 @@ public class EventsQuiz implements Quiz {
         if (answer.equals(question.getAnswers()[question.getRightAnswer()])) {
             userFlow.addPointsToUser(question.getPoints(), userId);
             sendMessage.setChatId(chatId)
-                    .setText("Right answer. You earned " + question.getPoints() + " points!")
+                    .setText("Верный ответ. Вы заработали " + question.getPoints() + " очков!")
                     .setReplyMarkup(Keyboard.getQuizQuestionReplyKeyboard(
                             question.getAnswers()[0],
                             question.getAnswers()[1],
@@ -48,7 +48,7 @@ public class EventsQuiz implements Quiz {
                     ));
         } else {
             sendMessage.setChatId(chatId)
-                    .setText("Wrong answer")
+                    .setText("Неверный ответ")
                     .setReplyMarkup(Keyboard.getQuizQuestionReplyKeyboard(
                             question.getAnswers()[0],
                             question.getAnswers()[1],
@@ -98,7 +98,7 @@ public class EventsQuiz implements Quiz {
     public SendMessage stopQuiz(long chatId) {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(chatId)
-                .setText("You finished the events quiz. Feel free to come back at any time")
+                .setText("Вы закончили викторину о событиях. Возвращайтесь скорее!")
                 .setReplyMarkup(Keyboard.getMainMenuKeyboard());
         return sendMessage;
     }

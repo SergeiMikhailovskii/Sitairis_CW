@@ -22,7 +22,7 @@ public interface Quiz {
         Preferences.userRoot().put(State.PREVIOUS_STATE, state);
 
         saveFactDialog.setChatId(chatId)
-                .setText("If this fact is interesting for you, you can save it. Do you want to do this?")
+                .setText("Если этот факт интересен для вас, то вы можете его сохранить.")
                 .setReplyMarkup(Keyboard.getSaveFactDialogKeyboard());
 
         return saveFactDialog;

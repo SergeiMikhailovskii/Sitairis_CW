@@ -18,6 +18,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 
 import java.util.List;
+import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
 public class FootballQuizBot extends TelegramLongPollingBot {
@@ -30,11 +31,13 @@ public class FootballQuizBot extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
         // For cleaning preferences data
-//        try {
-//            Preferences.userRoot().clear();
-//        } catch (BackingStoreException e) {
-//            e.printStackTrace();
-//        }
+        if (update.getMessage().getText().equals("/start")) {
+            try {
+                Preferences.userRoot().clear();
+            } catch (BackingStoreException e) {
+                e.printStackTrace();
+            }
+        }
 
         Message receivedMessage;
         String state = Preferences.userRoot().get(State.CURRENT_STATE, State.INITIAL_STATE);
@@ -76,7 +79,7 @@ public class FootballQuizBot extends TelegramLongPollingBot {
         if (command.getText().equals(Commands.START)) {
             Preferences.userRoot().put(State.CURRENT_STATE, State.MAIN_MENU_STATE);
             userFlow.addUserToDB(new User(command.getFrom().getId(), command.getFrom().getUserName(), 0));
-            sendMessage.setText("You started the bot");
+            sendMessage.setText("Вы запустили бота");
 
         } else {
             sendMessage.setText(Commands.UNKNOWN_COMMAND);
@@ -139,7 +142,7 @@ public class FootballQuizBot extends TelegramLongPollingBot {
             }
             case Commands.RESET_SCORE: {
                 userFlow.resetScore(receivedMessage.getFrom().getId());
-                SendMessage message = new SendMessage().setText("Score reset!")
+                SendMessage message = new SendMessage().setText("Счёт обнулён")
                         .setChatId(receivedMessage.getChatId())
                         .setReplyMarkup(Keyboard.getMainMenuKeyboard());
                 try {

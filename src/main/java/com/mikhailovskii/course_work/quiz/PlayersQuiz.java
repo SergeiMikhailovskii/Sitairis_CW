@@ -57,7 +57,7 @@ public class PlayersQuiz implements Quiz {
         if (answer.equals(playersQuiz.get(currentQuestion).getAnswers()[playersQuiz.get(currentQuestion).getRightAnswer()])) {
             userFlow.addPointsToUser(playersQuiz.get(currentQuestion).getPoints(), userId);
             sendMessage.setChatId(chatId)
-                    .setText("Right answer. You earned " + playersQuiz.get(currentQuestion).getPoints() + " points!")
+                    .setText("Верный ответ. Вы заработали " + playersQuiz.get(currentQuestion).getPoints() + " очков!")
                     .setReplyMarkup(Keyboard.getQuizQuestionReplyKeyboard(
                             playersQuiz.get(currentQuestion).getAnswers()[0],
                             playersQuiz.get(currentQuestion).getAnswers()[1],
@@ -67,7 +67,7 @@ public class PlayersQuiz implements Quiz {
                     ));
         } else {
             sendMessage.setChatId(chatId)
-                    .setText("Wrong answer")
+                    .setText("Неверный ответ")
                     .setReplyMarkup(Keyboard.getQuizQuestionReplyKeyboard(
                             playersQuiz.get(currentQuestion).getAnswers()[0],
                             playersQuiz.get(currentQuestion).getAnswers()[1],
@@ -97,7 +97,7 @@ public class PlayersQuiz implements Quiz {
     public SendMessage stopQuiz(long chatId) {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(chatId)
-                .setText("You finished the players quiz. Feel free to come back at any time")
+                .setText("Вы закончили викторину об игроках. Возвращайтесь скорее!")
                 .setReplyMarkup(Keyboard.getMainMenuKeyboard());
         return sendMessage;
     }
